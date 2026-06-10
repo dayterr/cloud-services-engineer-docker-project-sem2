@@ -1,6 +1,6 @@
 # stage 1
 
-FROM node:20-alpine AS builder
+FROM node:16-alpine AS builder
 
 WORKDIR /app
 
@@ -23,10 +23,8 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-RUN apk add --no-cache curl
-
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
 
 EXPOSE 8080
 
