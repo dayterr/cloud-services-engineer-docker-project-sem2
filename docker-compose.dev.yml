@@ -1,30 +1,22 @@
 services:
   backend:
-    image: ${DOCKER_USER}/docker-project-backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081" 
+    container_name: backend
     restart: unless-stopped
     networks:
       - my-net
-    expose: ["8081"]
     environment:
       - JWT_TOKEN=${JWT_TOKEN}
-    volumes:
-      - backend-data:/app/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 10s
-    deploy:
-      mode: replicated
-      replicas: 3
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 256M
-        reservations:
-          cpus: '0.25'
-          memory: 128M
     read_only: true
     security_opt:
       - no-new-privileges:true
@@ -34,33 +26,26 @@ services:
       - /tmp:rw,noexec,nosuid,size=64M
 
   frontend:
-    image: ${DOCKER_USER}/docker-project-frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VUE_APP_API_URL: http://backend:8081
+    container_name: frontend
     restart: unless-stopped
     networks:
       - my-net
+    ports:
+      - "80:80"
     depends_on:
       backend:
         condition: service_healthy
-    ports: 
-      - "80:80"
-    environment:
-      - VUE_APP_API_URL=/api
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 10s
-    deploy:
-      mode: replicated
-      replicas: 2
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 256M
-        reservations:
-          cpus: '0.25'
-          memory: 128M
     read_only: true
     security_opt:
       - no-new-privileges:true
@@ -74,6 +59,3 @@ networks:
   my-net:
     driver: bridge
     name: my-net
-
-volumes:
-  backend-data:
