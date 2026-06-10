@@ -18,7 +18,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
 
 # stage 2
 
-FROM alpine:3.5.7
+FROM alpine:3.15.7
 
 RUN apk add --no-cache ca-certificates curl
 
