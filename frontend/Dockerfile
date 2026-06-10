@@ -17,7 +17,7 @@ RUN npm run build
 
 # stage 2
 
-FROM nginxinc/nginx-unprivileged:2.11-alpine
+FROM nginxinc/nginx-unprivileged:3.23-alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
