@@ -1,6 +1,6 @@
 services:
   backend:
-    image: ${DOCKER_USER}/docker-project-backend:latest
+    image: ${DOCKER_USERNAME}/docker-project-backend:latest
     restart: unless-stopped
     networks:
       - my-net
@@ -34,7 +34,7 @@ services:
       - /tmp:rw,noexec,nosuid,size=64M
 
   frontend:
-    image: ${DOCKER_USER}/docker-project-frontend:latest
+    image: ${DOCKER_USERNAME}/docker-project-frontend:latest
     restart: unless-stopped
     networks:
       - my-net
