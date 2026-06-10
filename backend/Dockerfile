@@ -1,6 +1,6 @@
 # stage 1
 
-FROM golang:1.22-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /build
 
@@ -18,7 +18,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
 
 # stage 2
 
-FROM alpine:3.23
+FROM alpine:3.5.7
 
 RUN apk add --no-cache ca-certificates curl
 
